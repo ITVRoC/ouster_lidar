@@ -39,6 +39,7 @@ using PacketMsg = ouster_ros::PacketMsg;
 using OS1ConfigSrv = ouster_ros::OS1ConfigSrv;
 namespace OS1 = ouster::OS1;
 
+
 // fill in values that could not be parsed from metadata
 void populate_metadata_defaults(OS1::sensor_info& info,
                                 const std::string& specified_lidar_mode) {
@@ -144,7 +145,7 @@ bool validTimestamp(const ros::Time& msg_time) {
   const ros::Duration kMaxTimeOffset(1.0);
 
   const ros::Time now = ros::Time::now();
-  if (msg_time < (now - kMaxTimeOffset)) {
+  if (msg_time < (now - kMaxTimeOffset)){// && !strcmp(tm_mode.c_str(), "TIME_FROM_PTP_1588")) {
     ROS_WARN_STREAM_THROTTLE(
         1, "OS1 clock is currently not in sync with host. Current host time: "
                << now << " OS1 message time: " << msg_time
@@ -180,6 +181,7 @@ int main(int argc, char** argv) {
     auto imu_port = nh.param("os1_imu_port", 7502);
     auto replay = nh.param("replay", false);
     auto lidar_mode = nh.param("lidar_mode", std::string{});
+    auto timestamp_mode = nh.param("timestamp_mode", std::string{});
     auto scan_dur = ns(nh.param("scan_dur_ns", 100000000));
 
     // fall back to metadata file name based on hostname, if available
@@ -194,6 +196,15 @@ int main(int argc, char** argv) {
 
     if (OS1::lidar_mode_of_string(lidar_mode) == OS1::lidar_mode::MODE_INVALID) {
         ROS_ERROR("Invalid lidar mode %s", lidar_mode.c_str());
+        return EXIT_FAILURE;
+    }
+
+    if (not timestamp_mode.size()) {
+        timestamp_mode = OS1::to_string(OS1::TIME_FROM_INTERNAL_OSC);
+    }
+
+    if (!OS1::timestamp_mode_of_string(timestamp_mode)) {
+        ROS_ERROR("Invalid timestamp mode %s", timestamp_mode.c_str());
         return EXIT_FAILURE;
     }
 
@@ -225,6 +236,7 @@ int main(int argc, char** argv) {
 
         auto cli = OS1::init_client(hostname, udp_dest,
                                     OS1::lidar_mode_of_string(lidar_mode),
+                                    OS1::timestamp_mode_of_string(timestamp_mode),
                                     lidar_port, imu_port);
 
         if (!cli) {
@@ -232,6 +244,8 @@ int main(int argc, char** argv) {
             return EXIT_FAILURE;
         }
         ROS_INFO("Sensor reconfigured successfully, waiting for data...");
+
+        ROS_INFO("Using %s timestamp mode", timestamp_mode.c_str());
 
         // write metadata file to cwd (usually ~/.ros)
         auto metadata = OS1::get_metadata(*cli);

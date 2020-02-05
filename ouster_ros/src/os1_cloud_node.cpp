@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
     auto lidar_frame = tf_prefix + "/os1_lidar";
     auto replay = false;
     nh.param<bool>("replay", replay, false);
-    
+
 
 
     ouster_ros::OS1ConfigSrv cfg{};

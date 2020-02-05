@@ -24,8 +24,9 @@ find_package(catkin REQUIRED COMPONENTS
   tf2
   tf2_ros
   tf2_geometry_msgs
-  minkindr
-  minkindr_conversions
+  # Dependencies for ETZH motion_correction node
+  #minkindr
+  #minkindr_conversions
 )
 
 add_message_files(FILES PacketMsg.msg)
@@ -67,8 +68,8 @@ add_executable(img_node src/img_node.cpp)
 target_link_libraries(img_node ouster_ros ${catkin_LIBRARIES})
 add_dependencies(img_node ${PROJECT_NAME}_gencpp)
 
-add_executable(motion_correction_node src/motion_correction_node.cpp src/motion_correction.cpp)
-target_link_libraries(motion_correction_node ${catkin_LIBRARIES})
+#add_executable(motion_correction_node src/motion_correction_node.cpp src/motion_correction.cpp)
+#target_link_libraries(motion_correction_node ${catkin_LIBRARIES})
 
 install(TARGETS os1_node
                 os1_cloud_node
