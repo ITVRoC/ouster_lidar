@@ -2,8 +2,7 @@
 Sample code for connecting to and configuring the OS-1, reading and visualizing
 data, and interfacing with ROS.
 
-This package allows to change Ouster timestamp mode as ROS parameter and awaits the PTP sync between the Ouster clock and ROS time to start publishing in the topics. 
-
+This package allows to change Ouster timestamp mode as ROS parameter and awaits the PTP sync between the Ouster clock and ROS time to start publishing on topics.
 ### PTP
 
 To use [PTP](https://endruntechnologies.com/pdf/PTP-1588.pdf), install with:
