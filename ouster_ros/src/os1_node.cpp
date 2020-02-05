@@ -145,7 +145,7 @@ bool validTimestamp(const ros::Time& msg_time) {
   const ros::Duration kMaxTimeOffset(1.0);
 
   const ros::Time now = ros::Time::now();
-  if (msg_time < (now - kMaxTimeOffset)){// && !strcmp(tm_mode.c_str(), "TIME_FROM_PTP_1588")) {
+  if (msg_time < (now - kMaxTimeOffset)) {
     ROS_WARN_STREAM_THROTTLE(
         1, "OS1 clock is currently not in sync with host. Current host time: "
                << now << " OS1 message time: " << msg_time

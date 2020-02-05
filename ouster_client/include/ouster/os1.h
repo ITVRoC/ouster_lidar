@@ -44,9 +44,9 @@ enum timestamp_mode {
 
 
 struct version {
-int16_t major;
-int16_t minor;
-int16_t patch;
+    int16_t major;
+    int16_t minor;
+    int16_t patch;
 };
 
 const version invalid_version = {0, 0, 0};
