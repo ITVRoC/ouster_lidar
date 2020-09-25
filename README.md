@@ -69,7 +69,20 @@ The ptp4l program implements the PTP boundary clock and ordinary clock
 
 To use [PTP](https://endruntechnologies.com/pdf/PTP-1588.pdf), install with:
 ```
-sudo apt install linuxptp
+sudo apt install linuxptp jq
+```
+
+Edit the config file `/etc/linuxptp/ptp4l.conf`:
+
+```
+sudo vim /etc/linuxptp/ptp4l.conf
+```
+
+And set:
+
+```
+#clockClass     248
+clockClass      128
 ```
 
 Edit the parameters for starting the service:
@@ -91,14 +104,12 @@ ExecStart=/usr/sbin/ptp4l -f /etc/linuxptp/ptp4l.conf -i eno1 -m
 WantedBy=multi-user.target
 ```
   
-Start the service:
+Activate the service:
 ```
-sudo systemctl restart ptp4l
-```
-
-Make it run on boot:
-```
+sudo systemctl daemon-reload
 sudo systemctl enable ptp4l
+sudo systemctl restart ptp4l
+sudo systemctl status ptp4l
 ```
 
 #### phc2sys configuration
@@ -128,17 +139,22 @@ ExecStart=/usr/sbin/phc2sys -w -s eno1 -O 0
 WantedBy=multi-user.target
 ```
 
-Start the service:
+Activate the service:
 ```
+sudo systemctl daemon-reload
+sudo systemctl enable phc2sys
 sudo systemctl restart phc2sys
+sudo systemctl status phc2sys
 ```
 
-Make it run on boot:
-```
-sudo systemctl enable phc2sys
-```
 
 ### Troubleshooting
+
+#### Message time delay
+
+The delay must be less than 1:
+
+`rostopic delay /os1_cloud_node/imu`
 
 #### Local hardware clock verification
 
