@@ -98,7 +98,7 @@ Description=Precision Time Protocol (PTP) service
 
 [Service]
 Type=simple
-ExecStart=/usr/sbin/ptp4l -f /etc/linuxptp/ptp4l.conf -i eno1 -m
+ExecStart=/usr/sbin/ptp4l -f /etc/linuxptp/ptp4l.conf -i eno1
 
 [Install]
 WantedBy=multi-user.target
